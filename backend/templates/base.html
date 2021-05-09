@@ -1,0 +1,34 @@
+<html>
+    <head>
+      {% if title %}
+      <title>{{ title }} - exams-io</title>
+      {% else %}
+      <title>Welcome to exams-io</title>
+      {% endif %}
+    </head>
+    <body>
+        <div>exams-io: <a href="/index">Home</a>
+            <button type="button" id = "changecolor" >change color</button>
+            {% if user %}
+                {% if user.avatar %}
+                    <img src="{{user.avatar}}" style=" width: 50px;" > 
+                {% endif %}
+                <a style="float: right;" href="/logout">Logout</a> 
+            {% endif %}
+        </div>
+      
+        <hr>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul class=flashes>
+            {% for message in messages %}
+                <li>{{ message }}</li>
+             {% endfor %}
+            </ul>
+        {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    <script type=text/javascript src="{{url_for('static', filename='changeColor.js') }}"></script>   
+    </body>
+    
+</html>
