@@ -1,7 +1,7 @@
 {% extends "base.html" %}
-
 {% block content %}
-    <h1>Register</h1>
+<h1 class="display-2" style="text-align: center; color:#212529; padding-top: 150px;">Register</h1>
+<div class="container">
     <form action="" method="post">
         {{ form.hidden_tag() }}
         <p>
@@ -48,21 +48,22 @@
         </p>
         <div class="input-group">
             <span class="input-group-addon">role</span>
-                <select name="role" class="selectpicker form-control">
-                  {% for o in form.role %}
-                  <option value="{{ o.name }}">{{ o }}</option>
-                  {% endfor %}
-                </select>
+            <select name="role" class="selectpicker form-control">
+                {% for o in form.role %}
+                <option value="{{ o.name }}">{{ o }}</option>
+                {% endfor %}
+            </select>
         </div>
         <div class="input-group">
             <span class="input-group-addon">avatar</span>
-                <select name="avatar" class="selectpicker form-control">
-                  {% for o in form.avatar %}
-                  <option value="{{ o.name }}">{{ o }}</option>
-                  {% endfor %}
-                </select>
+            <select name="avatar" class="selectpicker form-control">
+                {% for o in form.avatar %}
+                <option value="{{ o.name }}">{{ o }}</option>
+                {% endfor %}
+            </select>
         </div>
 
         <p>{{ form.submit() }}</p>
     </form>
+</div>
 {% endblock %}
