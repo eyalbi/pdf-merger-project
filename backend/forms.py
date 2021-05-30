@@ -1,6 +1,8 @@
+from models import Inovice
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField
 from wtforms.validators import DataRequired, Email, EqualTo
+from wtforms.ext.sqlalchemy.fields import QuerySelectField
 from models import ROLES,User
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
@@ -46,6 +48,7 @@ class StudentMessage(FlaskForm):
 class uploadInovice(FlaskForm):
     Inovice_pdf = StringField(default='')
     inovice_Customer = StringField(default='')
+    inovice_Accountant = SelectField(u'Select Accountant', choices=[])
     submit = SubmitField('upload') 
 
 class DownloadInovice(FlaskForm):

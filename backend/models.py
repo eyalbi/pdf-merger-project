@@ -13,7 +13,6 @@ class User(UserMixin, db.Document):
     # User information
     first_name = db.StringField(default='')
     last_name = db.StringField(default='')
-
     # Relationships
     role = db.StringField(default='', choices = ROLES)
     Blocked = db.StringField(default='false')
@@ -29,5 +28,5 @@ class User(UserMixin, db.Document):
 class Inovice(UserMixin,db.Document):
     Inovice_pdf = db.StringField(default='')
     inovice_Customer = db.StringField(default='')
-    
+    inovice_Accountant = db.StringField(default='')
    

@@ -5,7 +5,7 @@ from email.message import EmailMessage
 import PyPDF2
 
 
-from flask import Flask, current_app, flash, Response, request, render_template_string, render_template, jsonify, redirect, url_for
+from flask import Flask, config, current_app, flash, Response, request, render_template_string, render_template, jsonify, redirect, url_for
 from flask_mongoengine import MongoEngine
 from bson.objectid import ObjectId
 from flask_login import LoginManager, current_user, login_user, login_required, logout_user
@@ -13,6 +13,12 @@ from flask_principal import Principal, Permission, RoleNeed, identity_changed, i
 
 from forms import LoginForm, RegistrationForm,AdminDeleteForm, AdminUpdateForm, AdminSendEmailForm,StudentMessage,uploadInovice,DownloadInovice
 from models import ROLES
+
+#linoy's code
+from flask_dropzone import Dropzone
+basedir = os.path.abspath(os.path.dirname(__file__))
+#linoy's code
+
 
 # Class-based application configuration
 class ConfigClass(object):
@@ -32,6 +38,17 @@ class ConfigClass(object):
 
 app = Flask(__name__)
 app.config.from_object(__name__+'.ConfigClass')
+
+
+#linoy's code
+app.config.update(
+    UPLOADED_PATH = os.path.join(basedir, 'uploads'),
+    DROPZONE_MAX_FILE_SIZE = 1024,
+    DROPZONE_TIMEOUT = 5*60*1000)
+
+dropzone = Dropzone(app)
+
+#linoy's code
 
 db = MongoEngine()
 db.init_app(app)
@@ -88,6 +105,26 @@ def login():
     return render_template('login.html', title='Sign In', form=form)
 
 
+#tzlil and linoy's changes
+# @app.route('/new', methods=['GET', 'POST'])
+# def login():
+#     if current_user.is_authenticated:
+#         return redirect(url_for('index'))
+#     form = LoginForm()
+#     if form.validate_on_submit():
+#         user = User.objects(username=form.username.data).first()
+#         if user.Blocked == 'true' or user.Blocked == 'True':
+#             flash('Your user is blocked adress Admin')
+#             return redirect(url_for('login'))
+#         if user is None or not user.check_password(form.password.data):
+#             flash('Invalid username or password')
+#             return redirect(url_for('login'))
+#         login_user(user, remember=form.remember_me.data)
+#         identity_changed.send(current_app._get_current_object(),
+#                               identity=Identity(user.username))
+#         return redirect(url_for('index'))
+#     return render_template('new.html', title='Sign In', form=form)
+
 @app.route('/logout')
 def logout():
     logout_user()
@@ -141,11 +178,6 @@ def Merge_pdf(user):
     pdfOutputFile.close()
     pdfFile.close()
 
-
-
-
-
-
 @app.route('/')
 @app.route('/index')
 @login_required
@@ -157,16 +189,6 @@ def index():
         return render_template('Customer.html', user=user)
     else:
         return redirect(url_for('index'))
-
-
-
-
-
-
-
-
-
-
 
 
 @app.route('/Customer/DownloadInoviceInovices', methods=['GET','POST'])
@@ -202,17 +224,19 @@ def Upload_inv():
         return redirect('/index')
 
 
+@app.route('/Customer/test', methods=['POST', 'GET'])
+@login_required
+def upload():
+    user = User.objects(username=current_user.username).first()
+    form = uploadInovice()
+    form.inovice_Accountant.choices = [(u.username, u.username) for u in User.objects.filter(role = 'ACCOUNTANT')]
+    if request.method == 'POST':
+        f = request.files.get('file')
+        f.save(os.path.join(app.config['UPLOADED_PATH'], f.filename))
+    return render_template('test.html', user=user, form=form)
 
-
-
-
-
-
-
-
-
-
-
+#if __name__ == '__main__':
+#    app.run(debug = True)
 
 if __name__ == '__main__':
     app.run()
