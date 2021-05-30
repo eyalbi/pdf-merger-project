@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+
+<title>Flask-File Drag Drop System</title>
+<h1 style="text-align: center; color:#212529; padding-top: 150px;">Upload PDF</h1>
+{{ dropzone.load_css() }}
+{{ dropzone.style('border: 2px dashed #212529; min-height: 400px; margin-left: 10%; margin-right: 10%') }}
+
+<!--<div style="color: blue; text-align: center; border: 4px solid #0087E7;">
+    File drag & Drop System with flask dropzone
+</div>-->
+{{ dropzone.create(action='upload') }}
+{{ dropzone.load_js() }}
+{{ dropzone.config() }}
+
+<form action="" method="post">
+    {{ form.hidden_tag() }}
+    <div class="input-group">
+        <span class="input-group-addon">avatar</span>
+        <select name="inovice_Accountant" class="selectpicker form-control">
+            {% for o in form.inovice_Accountant %}
+            <option value="{{ o.username }}">{{ o }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <p>{{ form.submit() }}</p>
+</form>
+{% endblock %}
