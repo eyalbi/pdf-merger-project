@@ -8,19 +8,18 @@ class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     remember_me = BooleanField('Remember Me')
-    submit = SubmitField('Sign In')
+    submit1 = SubmitField('Sign In')
 
 class RegistrationForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()])
+    username1 = StringField('Username', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    password2 = PasswordField(
-        'Repeat Password', validators=[DataRequired(), EqualTo('password')])
+    password1 = PasswordField('Password', validators=[DataRequired()])
+    #password2 = PasswordField('Repeat Password', validators=[DataRequired(), EqualTo('password')])
     first_name = StringField('First Name', validators=[DataRequired()])
     last_name = StringField('Last Name', validators=[DataRequired()])
     role = SelectField('select role:', choices = [('ACCOUNTANT','ACCOUNTANT'),('CUSTOMER','CUSTOMER')])
     avatar = SelectField('select avatar:', choices = [('https://robohash.org/3EC.png?set=set4','cat1'),('https://robohash.org/293.png?set=set4','cat2'),('https://robohash.org/ZOB.png?set=set4','cat3')])
-    submit = SubmitField('Register')
+    submit2 = SubmitField('Sign Up')
 
 class AdminDeleteForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])

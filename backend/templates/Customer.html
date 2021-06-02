@@ -1,16 +1,8 @@
-{% extends "base.html" %}
+{% extends "home.html" %}
 {% block content %}
-<h1>Hello {{user.username}} </h1>
+<h1 class="text-dark head">Hello {{ user.first_name}}</h1>
+<h5 class="text-dark head5">Welcome to PDF-Merger</h5>
 
-<div>
-    <div>
-        <a href="{{url_for('upload')}}">Upload Inovice pdf</a>
-    </div>
-
-    <div>
-        <a href="{{url_for('Download_merged_pdf')}}">Download Merge pdf</a>
-    </div>
-</div>
 
 
 
