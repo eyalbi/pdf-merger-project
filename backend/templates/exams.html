@@ -1,15 +1,15 @@
-{% extends "base.html" %}
+{% extends "home.html" %}
 
 {% block content %}
-    <h1>Exams</h1>
-    {%if exams%}
-        <ul>
-            {%for e in exams %}
-            <li><a href = {{e.exam_pdf}}>{{ e.Exam_name}}</a></li> 
-         {% endfor %}
-        </ul>
-    {%endif%}
+<h1>Exams</h1>
+{%if exams%}
+<ul>
+    {%for e in exams %}
+    <li><a href={{e.exam_pdf}}>{{ e.Exam_name}}</a></li>
+    {% endfor %}
+</ul>
+{%endif%}
 
-    
-    
+
+
 {% endblock %}

@@ -85,28 +85,7 @@ def on_identity_loaded(sender, identity):
         identity.provides.add(RoleNeed(current_user.role))
 
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if current_user.is_authenticated:
-        return redirect(url_for('index'))
-    form = LoginForm()
-    if form.validate_on_submit():
-        user = User.objects(username=form.username.data).first()
-        if user.Blocked == 'true' or user.Blocked == 'True':
-            flash('Your user is blocked adress Admin')
-            return redirect(url_for('login'))
-        if user is None or not user.check_password(form.password.data):
-            flash('Invalid username or password')
-            return redirect(url_for('login'))
-        login_user(user, remember=form.remember_me.data)
-        identity_changed.send(current_app._get_current_object(),
-                              identity=Identity(user.username))
-        return redirect(url_for('index'))
-    return render_template('login.html', title='Sign In', form=form)
-
-
-#tzlil and linoy's changes
-# @app.route('/new', methods=['GET', 'POST'])
+# @app.route('/login', methods=['GET', 'POST'])
 # def login():
 #     if current_user.is_authenticated:
 #         return redirect(url_for('index'))
@@ -123,7 +102,32 @@ def login():
 #         identity_changed.send(current_app._get_current_object(),
 #                               identity=Identity(user.username))
 #         return redirect(url_for('index'))
-#     return render_template('new.html', title='Sign In', form=form)
+#     return render_template('login.html', title='Sign In', form=form)
+
+
+#tzlil and linoy's changes
+@app.route('/new', methods=['GET', 'POST'])
+def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    form1 = LoginForm()
+    form2 = RegistrationForm()
+
+    if form1.validate_on_submit():
+        user = User.objects(username=form1.username.data).first()
+        #if user.Blocked == 'true' or user.Blocked == 'True':
+        #    flash('Your user is blocked adress Admin')
+        #    return redirect(url_for('login'))
+        if user is None or not user.check_password(form1.password.data):
+            flash('Invalid username or password')
+            return redirect(url_for('login'))
+        login_user(user, remember=form1.remember_me.data)
+        identity_changed.send(current_app._get_current_object(),
+                              identity=Identity(user.username))
+        return redirect(url_for('index'))
+    if form2.validate_on_submit():
+            register(form2)
+    return render_template('new.html', title='Sign In', form1=form1, form2=form2)
 
 @app.route('/logout')
 def logout():
@@ -134,20 +138,19 @@ def logout():
 
 
 @app.route('/register', methods=['GET', 'POST'])
-def register():
+def register(form):
     if current_user.is_authenticated:
         return redirect(url_for('index'))
-    try:
-        form = RegistrationForm()
-        if form.validate_on_submit():
-            
-            create_user(form)
-            flash('Congratulations, you are now a registered user!')
-            return redirect(url_for('login'))
-        return render_template('register.html', title='Register', form=form)
-    except:
-        flash('username Already exists')
-        return redirect('/register')
+
+    form = form
+    if form.validate_on_submit():  
+        create_user(form)
+        flash('Congratulations, you are now a registered user!')
+        return redirect(url_for('index'))
+    return render_template('new.html', title='Register', form=form)
+    # else:
+    #     flash('username Already exists')
+    #     return redirect('/register')
 
 def create_Inovice(form,u):
     inovice = Inovice(Inovice_pdf=form.Inovice_pdf.data,inovice_Customer = u.username)
@@ -155,11 +158,11 @@ def create_Inovice(form,u):
 
 
 def create_user(form):
-    user = User(username=form.username.data, email=form.email.data)
+    user = User(username=form.username1.data, email=form.email.data)
     user.role = form.role.data
     user.first_name = form.first_name.data
     user.last_name = form.last_name.data
-    user.set_password(form.password.data)
+    user.set_password(form.password1.data)
     user.avatar = form.avatar.data
     user.save()
 

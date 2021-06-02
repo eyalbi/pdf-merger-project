@@ -43,7 +43,7 @@ a {
 	margin: 15px 0;
 }
 
-button {
+.but {
 	border-radius: 20px;
 	border: 1px solid #ff4b2b;
 	background-color: #ff4b2b;
@@ -56,15 +56,15 @@ button {
 	transition: transform 80ms ease-in;
 }
 
-button:active {
+.but:active {
 	transform: scale(0.95);
 }
 
-button:focus {
+.but:focus {
 	outline: none;
 }
 
-button.ghost {
+.but.ghost {
 	background-color: transparent;
 	border-color: #ffffff;
 }
@@ -88,6 +88,15 @@ input {
 	width: 100%;
 }
 
+select {
+	background-color: #eee;
+	border: none;
+	padding: 12px 15px;
+	margin: 8px 0;
+	width: 100%;
+	color: rgb(0 0 0 / 55%);
+}
+
 .container {
 	background-color: #fff;
 	border-radius: 10px;
@@ -96,7 +105,7 @@ input {
 	overflow: hidden;
 	width: 768px;
 	max-width: 100%;
-	min-height: 480px;
+	min-height: 550px;
 }
 
 .form-container {
