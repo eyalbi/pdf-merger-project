@@ -1,9 +1,10 @@
+from flask.globals import session
 from models import User,Inovice
 import os
 import smtplib
 from email.message import EmailMessage
 import PyPDF2
-
+from datetime import datetime
 
 from flask import Flask, config, current_app, flash, Response, request, render_template_string, render_template, jsonify, redirect, url_for
 from flask_mongoengine import MongoEngine
@@ -44,7 +45,11 @@ app.config.from_object(__name__+'.ConfigClass')
 app.config.update(
     UPLOADED_PATH = os.path.join(basedir, 'uploads'),
     DROPZONE_MAX_FILE_SIZE = 1024,
-    DROPZONE_TIMEOUT = 5*60*1000)
+    DROPZONE_TIMEOUT = 5*60*1000),
+
+app.config['DROPZONE_UPLOAD_MULTIPLE'] = True
+app.config['DROPZONE_PARALLEL_UPLOADS'] = 5    
+
 
 dropzone = Dropzone(app)
 
@@ -67,7 +72,10 @@ gmail_password = '1q2w#E$R'
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.objects.get(id=user_id)
+    try:
+        return User.objects.get(id=user_id)
+    except:
+        redirect('index')
 
 
 @identity_loaded.connect_via(app)
@@ -108,11 +116,12 @@ def on_identity_loaded(sender, identity):
 #tzlil and linoy's changes
 @app.route('/new', methods=['GET', 'POST'])
 def login():
+    
     if current_user.is_authenticated:
         return redirect(url_for('index'))
     form1 = LoginForm()
     form2 = RegistrationForm()
-
+   
     if form1.validate_on_submit():
         user = User.objects(username=form1.username.data).first()
         #if user.Blocked == 'true' or user.Blocked == 'True':
@@ -167,16 +176,20 @@ def create_user(form):
     user.save()
 
 def Merge_pdf(user):
-    inovices = Inovice.objects()
+    inovices = Inovice.objects(inovice_Customer = current_user.username)
+    counter = 0 
+    pdfWriter = PyPDF2.PdfFileWriter()
     for i in inovices:
-        if i.inovice_Customer == user.username:
-            pdfFile = open(r"C:\Users\eyalb\OneDrive\Desktop\exams\sample.pdf",'rb')
-            pdfReader = PyPDF2.PdfFileReader(pdfFile)
-            pdfWriter = PyPDF2.PdfFileWriter()
-            for pageNum in range(pdfReader.numPages):
-                pageObj = pdfReader.getPage(pageNum)
-                pdfWriter.addPage(pageObj)
-    pdfOutputFile = open('MergedFiles.pdf', 'wb')
+        pdfFile = open(i.Inovice_pdf,'rb')
+        pdfReader = PyPDF2.PdfFileReader(pdfFile)
+        for pageNum in range(pdfReader.numPages):
+            pdfWriter.addPage(pdfReader.getPage(pageNum))
+    today = datetime.today()
+    YandM = datetime(today.year, today.month, 1)
+    timeString = str(YandM).split(" ")[0]
+
+    loc = os.path.join(basedir, 'Downloads')
+    pdfOutputFile = open(os.path.join(loc, '{0}-{1}-MergedFiles.pdf'.format(current_user.username,timeString)), 'wb')
     pdfWriter.write(pdfOutputFile)
     pdfOutputFile.close()
     pdfFile.close()
@@ -185,6 +198,7 @@ def Merge_pdf(user):
 @app.route('/index')
 @login_required
 def index():
+    
     user = User.objects(username=current_user.username).first()
     if user.role == 'ACCOUNTANT':
         return render_template('Accountant.html', user=user)
@@ -211,7 +225,7 @@ def Download_merged_pdf():
 
 
 
-@app.route('/Customer/Inovices', methods=['GET','POST'])
+@app.route('/Customer/Inovices', methods=['POST'])
 @login_required
 def Upload_inv():
     u = User.objects(username=current_user.username).first()
@@ -227,19 +241,36 @@ def Upload_inv():
         return redirect('/index')
 
 
+def checkinovice(Path,accountant,Customer):
+    I = Inovice.objects(Inovice_pdf = Path, inovice_Accountant = accountant,inovice_Customer = Customer )
+    if I:
+        return False
+    return True 
 @app.route('/Customer/test', methods=['POST', 'GET'])
 @login_required
 def upload():
+    
     user = User.objects(username=current_user.username).first()
     form = uploadInovice()
     form.inovice_Accountant.choices = [(u.username, u.username) for u in User.objects.filter(role = 'ACCOUNTANT')]
-    if request.method == 'POST':
-        f = request.files.get('file')
-        f.save(os.path.join(app.config['UPLOADED_PATH'], f.filename))
+    if request.method == 'POST' and not form.validate_on_submit():
+        session['file'] = []
+        for key, f in request.files.items():
+            if key.startswith('file'):
+                f.save(os.path.join(app.config['UPLOADED_PATH'], f.filename))
+                session['file'].append(os.path.join(app.config['UPLOADED_PATH'], f.filename))
+        redirect ('/')
+    if form.validate_on_submit():
+        for file in session['file']:
+            pdf = Inovice(inovice_Customer = current_user.username,inovice_Accountant = form.inovice_Accountant.data)
+            pdf.Inovice_pdf = file
+            pdf.save()
     return render_template('test.html', user=user, form=form)
 
-#if __name__ == '__main__':
+# if __name__ == '__main__':
 #    app.run(debug = True)
+   
+
 
 if __name__ == '__main__':
     app.run()

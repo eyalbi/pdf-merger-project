@@ -13,7 +13,9 @@
 </div>-->
     {{ dropzone.create(action='upload') }}
     {{ dropzone.load_js() }}
+   
     {{ dropzone.config() }}
+
     <div id="uploadelem">
         <form action="" method="post">
             {{ form.hidden_tag() }}
@@ -33,4 +35,5 @@
         </form>
     </div>
 </div>
+
 {% endblock %}
