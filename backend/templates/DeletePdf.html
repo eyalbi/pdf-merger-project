@@ -1,0 +1,21 @@
+{% extends "home.html" %}
+
+{% block content %}
+<h1
+    style="text-align: center; color:#212529; padding-top: 300px; font-family: 'Poppins', sans-serif; margin-bottom: 30px;">
+    Download Merged
+    PDF</h1>
+<div class="container">
+    <form action="" method="post">
+       <ul>
+        {% for i in inovices %}
+            <li> <input type = "checkbox"  name = "checked" value = "{{i.Inovice_pdf}}"> {{i.Inovice_pdf.split('uploads')[1]}}</li>
+
+        {% endfor %}
+       </ul> 
+       <div class="inputelem">
+            <input class="but" id="Delete" name="download" type="submit" value="delete pdf">
+        </div>
+    </form>
+</div>
+{% endblock %}

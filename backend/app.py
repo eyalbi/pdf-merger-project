@@ -225,6 +225,22 @@ def Download_merged_pdf():
 
 
 
+
+@app.route('/Customer/DeletePdf', methods=['GET','POST'])
+@login_required
+def Delete_Pdf():
+    u = User.objects(username=current_user.username).first()
+    inovices = Inovice.objects(inovice_Customer = current_user.username)
+    
+    if request.method == 'POST':
+        deletePDfList = request.form.getlist('checked')
+        for d in deletePDfList:
+            Deletepdf = Inovice.objects(Inovice_pdf = d ,inovice_Customer= current_user.username)
+            Deletepdf.delete()
+        
+        return redirect(url_for('index'))
+    return render_template('DeletePdf.html', title='DownloadInovice',user=u,inovices = inovices)
+
 @app.route('/Customer/Inovices', methods=['POST'])
 @login_required
 def Upload_inv():
