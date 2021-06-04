@@ -198,7 +198,7 @@ def Merge_pdf(user):
 @app.route('/index')
 @login_required
 def index():
-    
+    session['file'] = []
     user = User.objects(username=current_user.username).first()
     if user.role == 'ACCOUNTANT':
         return render_template('Accountant.html', user=user)
@@ -269,7 +269,6 @@ def upload():
     form = uploadInovice()
     form.inovice_Accountant.choices = [(u.username, u.username) for u in User.objects.filter(role = 'ACCOUNTANT')]
     if request.method == 'POST' and not form.validate_on_submit():
-        session['file'] = []
         for key, f in request.files.items():
             if key.startswith('file'):
                 f.save(os.path.join(app.config['UPLOADED_PATH'], f.filename))
