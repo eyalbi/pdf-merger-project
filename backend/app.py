@@ -237,8 +237,7 @@ def Delete_Pdf():
         for d in deletePDfList:
             Deletepdf = Inovice.objects(Inovice_pdf = d ,inovice_Customer= current_user.username)
             Deletepdf.delete()
-        
-        return redirect(url_for('index'))
+        return redirect(url_for('Delete_Pdf'))
     return render_template('DeletePdf.html', title='DownloadInovice',user=u,inovices = inovices)
 
 @app.route('/Customer/Inovices', methods=['POST'])
