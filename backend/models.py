@@ -29,4 +29,8 @@ class Inovice(UserMixin,db.Document):
     Inovice_pdf = db.StringField(default='')
     inovice_Customer = db.StringField(default='')
     inovice_Accountant = db.StringField(default='')
+
+class Merged_pdf(UserMixin,db.Document):
+    inovice_Accountant_mail = db.StringField(default='')
+    PdfPath = db.StringField(default='')
    

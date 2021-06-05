@@ -1,11 +1,13 @@
 from flask.globals import session
-from models import User,Inovice
+from models import User,Inovice,Merged_pdf
 import os
 import smtplib
 from email.message import EmailMessage
 import PyPDF2
 from datetime import datetime
 from pdf_mail import sendpdf 
+import schedule
+from datetime import date
 
 from flask import Flask, config, current_app, flash, Response, request, render_template_string, render_template, jsonify, redirect, url_for
 from flask_mongoengine import MongoEngine
@@ -196,12 +198,32 @@ def Merge_pdf(user):
     pdfFile.close()
     return os.path.join(loc, '{0}-{1}-MergedFiles.pdf'.format(current_user.username,timeString))
 
+def send_merged():
+    if date.today().day != 1:
+        return
+    inovices = Merged_pdf.objects()
+    path = ""
+    loc = os.path.join(basedir, 'Downloads')
+    paths = loc.split('\\')
+    seprator = '/'
+    for i in inovices:
+        k = sendpdf("{}".format(gmail_user), 
+                        "{}".format(i.inovice_Accountant_mail), 
+                        "{}".format(gmail_password), 
+                        "Inovice from {}".format(current_user.username), 
+                        "body of message", 
+                        "{}".format(i.PdfPath.split('\\')[-1].split('.')[0]), 
+                        "{}".format(seprator.join(paths))) 
+        k.email_send()
+
+
 @app.route('/')
 @app.route('/index')
 @login_required
 def index():
     session['file'] = []
     user = User.objects(username=current_user.username).first()
+    send_merged()
     if user.role == 'ACCOUNTANT':
         return render_template('Accountant.html', user=user)
     elif user.role == 'CUSTOMER':
@@ -220,12 +242,13 @@ def Download_merged_pdf():
         Acountant_username = Inovice.objects(inovice_Customer = current_user.username).first().inovice_Accountant
         mail = User.objects(username = Acountant_username ).first().email
         pathtofile = Merge_pdf(u)
-      
+        merged = Merged_pdf(inovice_Accountant_mail = mail,PdfPath = pathtofile)
+        merged.save()
         path = ""
         loc = os.path.join(basedir, 'Downloads')
         paths = loc.split('\\')
         seprator = '/'
-        print(pathtofile.split('\\')[-1])
+        
         k = sendpdf("{}".format(gmail_user), 
                     "{}".format(mail), 
                     "{}".format(gmail_password), 
@@ -305,8 +328,8 @@ def upload():
 #    app.run(debug = True)
    
 
-
 if __name__ == '__main__':
+    
     app.run()
 
 
