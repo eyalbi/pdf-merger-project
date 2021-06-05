@@ -38,8 +38,16 @@
                     <a class="nav-link text-white" href="/index"><i class="bx bx-home"></i> Home</a>
                 </li>
                 <li href="#">
+                    <a class="nav-link text-white" href="{{url_for('myprofile')}}"><i class="bx bx-user-circle"></i> My
+                        Profile</a>
+                </li>
+                <li href="#">
                     <a class="nav-link text-white" href="{{url_for('upload')}}"><i class="bx bx-upload"></i> Upload
                         Inovice</a>
+                </li>
+                <li href="#">
+                    <a class="nav-link text-white" href="{{url_for('Delete_Pdf')}}"><i class="bx bx-trash"></i> Delete
+                        PDF's before merge</a>
                 </li>
                 <li href="/Download_merged_pdf">
                     <a class="nav-link text-white" href="{{url_for('Download_merged_pdf')}}"><i
@@ -47,11 +55,7 @@
                         Download Merged
                         PDF</a>
                 </li>
-                <li href="#">
-                    <a class="nav-link text-white" href="{{url_for('Delete_Pdf')}}"><i class="bx bx-trash"></i> Delete
-                        PDF's before merge</a>
-                </li>
-                <li style="margin-top: 700px;">
+                <li style="margin-top: 650px;">
                     <a class="nav-link text-white" href="/logout"><i class="bx bx-log-out"></i> Logout</a>
                 </li>
             </ul>

@@ -211,7 +211,7 @@ def send_merged():
                         "{}".format(i.inovice_Accountant_mail), 
                         "{}".format(gmail_password), 
                         "Inovice from {}".format(current_user.username), 
-                        "body of message", 
+                        "Hello, here is my inovices. Have a good day!", 
                         "{}".format(i.PdfPath.split('\\')[-1].split('.')[0]), 
                         "{}".format(seprator.join(paths))) 
         k.email_send()
@@ -253,7 +253,7 @@ def Download_merged_pdf():
                     "{}".format(mail), 
                     "{}".format(gmail_password), 
                     "Inovice from {}".format(current_user.username), 
-                    "body of message", 
+                    "Hello, here is my inovices. Have a good day!",
                     "{}".format(pathtofile.split('\\')[-1].split('.')[0]), 
                     "{}".format(seprator.join(paths))) 
 
@@ -327,6 +327,12 @@ def upload():
 # if __name__ == '__main__':
 #    app.run(debug = True)
    
+@app.route('/Customer/myProfile', methods=['POST', 'GET'])
+@login_required
+def myprofile():
+    user = User.objects(username=current_user.username).first()
+    return render_template('myProfile.html', title='myProfile', user=user)
+
 
 if __name__ == '__main__':
     

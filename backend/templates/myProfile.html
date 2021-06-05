@@ -1,0 +1,22 @@
+{% extends "home.html" %}
+{% block content %}
+
+<h1
+    style="text-align: center; color:#212529; padding-top: 100px; font-family: 'Poppins', sans-serif; margin-bottom: 30px;">
+    My Profile</h1>
+<div style="justify-content: center; float: center; padding-left: 730px; margin-bottom: 30px;">
+    <img src="{{ user.avatar }}" height="200px" width="190px" style="float: center;">
+</div>
+
+<h5 style="text-align: center; color:#212529; font-family: 'Poppins', sans-serif; margin-bottom: 20px;">Username: {{
+    user.username }}</h5>
+<h5 style="text-align: center; color:#212529; font-family: 'Poppins', sans-serif; margin-bottom: 20px;">Email: {{
+    user.email }}</h5>
+<h5 style="text-align: center; color:#212529; font-family: 'Poppins', sans-serif; margin-bottom: 20px;">Name: {{
+    user.first_name }}</h5>
+<h5 style="text-align: center; color:#212529; font-family: 'Poppins', sans-serif; margin-bottom: 20px;">Last Name: {{
+    user.last_name }}</h5>
+<h5 style="text-align: center; color:#212529; font-family: 'Poppins', sans-serif; margin-bottom: 20px;">Role: {{
+    user.role }}</h5>
+
+{% endblock %}
