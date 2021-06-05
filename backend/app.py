@@ -5,6 +5,7 @@ import smtplib
 from email.message import EmailMessage
 import PyPDF2
 from datetime import datetime
+from pdf_mail import sendpdf 
 
 from flask import Flask, config, current_app, flash, Response, request, render_template_string, render_template, jsonify, redirect, url_for
 from flask_mongoengine import MongoEngine
@@ -193,6 +194,7 @@ def Merge_pdf(user):
     pdfWriter.write(pdfOutputFile)
     pdfOutputFile.close()
     pdfFile.close()
+    return os.path.join(loc, '{0}-{1}-MergedFiles.pdf'.format(current_user.username,timeString))
 
 @app.route('/')
 @app.route('/index')
@@ -215,7 +217,25 @@ def Download_merged_pdf():
     form = DownloadInovice()
     # try:
     if form.validate_on_submit():
-        Merge_pdf(u)
+        Acountant_username = Inovice.objects(inovice_Customer = current_user.username).first().inovice_Accountant
+        mail = User.objects(username = Acountant_username ).first().email
+        pathtofile = Merge_pdf(u)
+      
+        path = ""
+        loc = os.path.join(basedir, 'Downloads')
+        paths = loc.split('\\')
+        seprator = '/'
+        print(pathtofile.split('\\')[-1])
+        k = sendpdf("{}".format(gmail_user), 
+                    "{}".format(mail), 
+                    "{}".format(gmail_password), 
+                    "Inovice from {}".format(current_user.username), 
+                    "body of message", 
+                    "{}".format(pathtofile.split('\\')[-1].split('.')[0]), 
+                    "{}".format(seprator.join(paths))) 
+
+        
+        k.email_send()
         flash('Download seccessfull!')
         return redirect(url_for('index'))
     return render_template('DownloadPdf.html', title='DownloadInovice', form=form,user=u)
