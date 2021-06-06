@@ -8,15 +8,34 @@
     <img src="{{ user.avatar }}" height="200px" width="190px" style="float: center;">
 </div>
 
-<h5 style="text-align: center; color:#212529; font-family: 'Poppins', sans-serif; margin-bottom: 20px;">Username: {{
-    user.username }}</h5>
-<h5 style="text-align: center; color:#212529; font-family: 'Poppins', sans-serif; margin-bottom: 20px;">Email: {{
-    user.email }}</h5>
-<h5 style="text-align: center; color:#212529; font-family: 'Poppins', sans-serif; margin-bottom: 20px;">Name: {{
-    user.first_name }}</h5>
-<h5 style="text-align: center; color:#212529; font-family: 'Poppins', sans-serif; margin-bottom: 20px;">Last Name: {{
-    user.last_name }}</h5>
-<h5 style="text-align: center; color:#212529; font-family: 'Poppins', sans-serif; margin-bottom: 20px;">Role: {{
-    user.role }}</h5>
+<div>
+
+    <h5 style="text-align: center; color:#212529; font-family: 'Poppins', sans-serif; margin-bottom: 20px;">
+        <strong>Username: </strong> {{
+        user.username }}
+    </h5>
+    <h5 style="text-align: center; color:#212529; font-family: 'Poppins', sans-serif; margin-bottom: 20px;">
+        <strong>Email: </strong> {{
+        user.email }}
+    </h5>
+    <h5 style="text-align: center; color:#212529; font-family: 'Poppins', sans-serif; margin-bottom: 20px;">
+        <strong>Name:
+        </strong> {{
+        user.first_name }}
+    </h5>
+    <h5 style="text-align: center; color:#212529; font-family: 'Poppins', sans-serif; margin-bottom: 20px;">
+        <strong>Last
+            Name: </strong>{{
+        user.last_name }}
+    </h5>
+    <h5 style="text-align: center; color:#212529; font-family: 'Poppins', sans-serif; margin-bottom: 20px;">
+        <strong>Role:
+        </strong> {{
+        user.role }}
+    </h5>
+
+</div>
+
+
 
 {% endblock %}
